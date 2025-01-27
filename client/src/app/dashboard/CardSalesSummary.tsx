@@ -1,4 +1,4 @@
-import { useGetDashboardMetricsQuery } from "@/state/api";
+import { useGetDashboardMetricsQuery } from "@/app/state/api";
 import { TrendingUp } from "lucide-react";
 import React, { useState } from "react";
 import {
@@ -11,25 +11,32 @@ import {
   YAxis,
 } from "recharts";
 
-const CardSalesSummary = () => {
+interface SalesData {
+  date: string;
+  totalValue: number;
+  changePercentage?: number;
+}
+
+const CardSalesSummary: React.FC = () => {
   const { data, isLoading, isError } = useGetDashboardMetricsQuery();
-  const salesData = data?.salesSummary || [];
+  const salesData: SalesData[] = data?.salesSummary || [];
 
-  const [timeframe, setTimeframe] = useState("weekly");
+  const [timeframe, setTimeframe] = useState<string>("weekly");
 
-  const totalValueSum =
-    salesData.reduce((acc, curr) => acc + curr.totalValue, 0) || 0;
+  const totalValueSum: number =
+    salesData.reduce((acc: number, curr: SalesData) => acc + curr.totalValue, 0) || 0;
 
-  const averageChangePercentage =
-    salesData.reduce((acc, curr, _, array) => {
-      return acc + curr.changePercentage! / array.length;
+  const averageChangePercentage: number =
+    salesData.reduce((acc: number, curr: SalesData, _, array) => {
+      return acc + (curr.changePercentage ?? 0) / array.length;
     }, 0) || 0;
 
-  const highestValueData = salesData.reduce((acc, curr) => {
-    return acc.totalValue > curr.totalValue ? acc : curr;
-  }, salesData[0] || {});
+  const highestValueData: SalesData =
+    salesData.reduce((acc: SalesData, curr: SalesData) => {
+      return acc.totalValue > curr.totalValue ? acc : curr;
+    }, salesData[0]) || ({} as SalesData);
 
-  const highestValueDate = highestValueData.date
+  const highestValueDate: string = highestValueData.date
     ? new Date(highestValueData.date).toLocaleDateString("en-US", {
         month: "numeric",
         day: "numeric",
