@@ -24,7 +24,10 @@ const CardSalesSummary: React.FC = () => {
   const [timeframe, setTimeframe] = useState<string>("weekly");
 
   const totalValueSum: number =
-    salesData.reduce((acc: number, curr: SalesData) => acc + curr.totalValue, 0) || 0;
+    salesData.reduce(
+      (acc: number, curr: SalesData) => acc + curr.totalValue,
+      0
+    ) || 0;
 
   const averageChangePercentage: number =
     salesData.reduce((acc: number, curr: SalesData, _, array) => {
@@ -155,3 +158,4 @@ const CardSalesSummary: React.FC = () => {
 };
 
 export default CardSalesSummary;
+// this is the world
